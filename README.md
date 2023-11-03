@@ -5,7 +5,7 @@ This app serves as a client for the [express-sample-api](https://github.com/kazu
 ## App Requirements:
 To use this app, you need to connect to the same network as the [express-sample-api](https://github.com/kazu09/express-sample-api).
 
-## App Description.
+## Screen Description.
 ### UserId
   This is assuming the database field's Id.
 ### Name
