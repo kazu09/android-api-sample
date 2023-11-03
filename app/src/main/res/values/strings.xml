@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">android-api-sample</string>
+    <string name="default_id_text">0</string>
+    <string name="default_name_text">Sample Name</string>
+    <string name="default_mail_text">test@sample.com</string>
+    <string name="default_message_text">Hello Android!!</string>
+    <string name="default_url_text">http://127.0.0.1:3000</string>
+    <string name="not_url_text">URL is not entered.</string>
+    <string name="id_mail_not_entered">Either the user ID or the email is not entered.</string>
+    <string name="select_http_status">Please select a sending HTTP status..</string>
 </resources>

@@ -1,3 +1,10 @@
+/**
+ * ApiClient.kt
+ * android-api-sample
+ *
+ * Copyright © 2023年 kazu. All rights reserved.
+ */
+
 package com.kazu.android_api_sample.client
 
 import android.util.Log
@@ -9,16 +16,28 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import java.io.IOException
 
 class ApiClient {
-    private val client = OkHttpClient()
 
-    fun get(url: String, id:String, callback: (String?, String?) -> Unit) {
+    // okhttp output log settings
+    private val logging = HttpLoggingInterceptor().apply {
+        // Set to log level body
+        // Output the logs of the request and response bodies.
+        // If you do not want to log the request and response bodies, change it to 'NONE'.
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .build()
+
+    fun get(url: String, id: String, callback: (String?, String?) -> Unit) {
         Log.d("ApiClient", "GET ${Constants.USERS_API}$id")
+        // Get URL generation
         val getUrl = "$url${Constants.USERS_API}$id"
-        println("url : $getUrl")
         val request: Request = Request.Builder()
             .url(getUrl)
             .get()
@@ -30,7 +49,6 @@ class ApiClient {
     fun getAllUser(url: String, callback: (String?, String?) -> Unit) {
         Log.d("ApiClient", "GET ${Constants.USERS_API}")
         val getUrl = "$url${Constants.USERS_API}"
-        println("url : $getUrl")
         val request: Request = Request.Builder()
             .url(getUrl)
             .get()
@@ -39,9 +57,11 @@ class ApiClient {
         client.newCall(request).enqueue(responseCallback(callback))
     }
 
-    fun post(url: String, name: String, mail: String , callback: (String?, String?) -> Unit) {
+    fun post(url: String, name: String, mail: String, callback: (String?, String?) -> Unit) {
         Log.d("ApiClient", "POST ${Constants.USERS_API}")
+        // Post URL generation
         val postUrl = "$url${Constants.USERS_API}"
+        // Request body generation
         val jsonBody = JSONObject().apply {
             put("name", name)
             put("email", mail)
@@ -56,9 +76,17 @@ class ApiClient {
         client.newCall(request).enqueue(responseCallback(callback))
     }
 
-    fun put(url: String, id:String, name: String, mail: String , callback: (String?, String?) -> Unit) {
+    fun put(
+        url: String,
+        id: String,
+        name: String,
+        mail: String,
+        callback: (String?, String?) -> Unit
+    ) {
         Log.d("ApiClient", "PUT ${Constants.USERS_API}$id")
+        // Put URL generation
         val putUrl = "$url${Constants.USERS_API}$id"
+        // Request body generation
         val jsonBody = JSONObject().apply {
             put("name", name)
             put("email", mail)
@@ -73,8 +101,9 @@ class ApiClient {
         client.newCall(request).enqueue(responseCallback(callback))
     }
 
-    fun delete(url: String, id:String, callback: (String?, String?) -> Unit) {
+    fun delete(url: String, id: String, callback: (String?, String?) -> Unit) {
         Log.d("ApiClient", "DELETE ${Constants.USERS_API}$id")
+        // DELETE URL generation
         val deleteUrl = "$url${Constants.USERS_API}$id"
         val request = Request.Builder()
             .url(deleteUrl)
@@ -87,10 +116,12 @@ class ApiClient {
     private fun responseCallback(callback: (String?, String?) -> Unit): Callback {
         return object : Callback {
             override fun onFailure(call: Call, e: IOException) {
+                // Failure process
                 callback(null, e.message)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                // Response success process
                 val res = response.body?.string()
                 callback(res, null)
             }
